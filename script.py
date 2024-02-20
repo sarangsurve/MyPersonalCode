@@ -1,18 +1,18 @@
 import boto3
 
-# Create an EC2 client
-ec2_client = boto3.client('ec2')
+# Create a Glue client
+glue_client = boto3.client('glue')
 
-# Get all security groups in the current region
-response = ec2_client.describe_security_groups()
+# Specify the name of your Glue connection
+connection_name = 'your-connection-name'
 
-# Extract and print security group details
-for security_group in response['SecurityGroups']:
-    group_id = security_group['GroupId']
-    group_arn = f"arn:aws:ec2:{boto3.Session().region_name}:{boto3.Session().client('sts').get_caller_identity()['Account']}:security-group/{group_id}"
-    
-    print(f"Security Group ID: {group_id}")
-    print(f"Security Group ARN: {group_arn}")
-    print("Security Group Details:")
-    print(security_group)
-    print("\n")
+# Get the Glue connection
+response = glue_client.get_connection(
+    Name=connection_name
+)
+
+# Extract information from the response
+connection_details = response['Connection']
+print(f"Connection Name: {connection_details['Name']}")
+print(f"Connection Type: {connection_details['ConnectionProperties']['CONNECTION_TYPE']}")
+print(f"Connection Parameters: {connection_details['ConnectionProperties']['CONNECTOR_CLASS_NAME']}")
