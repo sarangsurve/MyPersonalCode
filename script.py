@@ -1,24 +1,28 @@
 import boto3
 
-def list_glue_jobs_with_connections():
-    # Create a Glue client
-    glue_client = boto3.client('glue')
+def get_vpc_id_from_connection_name(connection_name):
+    # Create an EC2 client
+    ec2_client = boto3.client('ec2')
 
-    # List all Glue jobs
-    response = glue_client.get_jobs()
+    # Describe VPC peering connections
+    response = ec2_client.describe_vpc_peering_connections(
+        Filters=[
+            {'Name': 'tag:Name', 'Values': [connection_name]}
+        ]
+    )
 
-    # Iterate through the jobs and print job name along with connection name
-    for job in response['Jobs']:
-        job_name = job['Name']
-        connections = job.get('Connections', [])
+    # Check if any VPC peering connections were found
+    if 'VpcPeeringConnections' in response and len(response['VpcPeeringConnections']) > 0:
+        # Extract and return the VPC ID
+        vpc_id = response['VpcPeeringConnections'][0]['RequesterVpcInfo']['VpcId']
+        return vpc_id
+    else:
+        print(f"No VPC peering connections found with the name '{connection_name}'.")
+        return None
 
-        print(f"Glue Job Name: {job_name}")
-        if connections:
-            connection_names = [connection['Name'] for connection in connections]
-            print(f"Connection Names: {', '.join(connection_names)}")
-        else:
-            print("No connections associated with this job.")
-        print("\n")
+# Example usage
+connection_name = 'YourConnectionName'
+vpc_id = get_vpc_id_from_connection_name(connection_name)
 
-if __name__ == "__main__":
-    list_glue_jobs_with_connections()
+if vpc_id:
+    print(f"The VPC ID for the connection '{connection_name}' is: {vpc_id}")
