@@ -1,17 +1,12 @@
-import boto3
+#!/bin/bash
 
-# Replace 'your_lambda_function_name' with your actual Lambda function name
-lambda_function_name = 'your_lambda_function_name'
+file_content=$(<your_file.txt)
 
-# Create a Lambda client
-lambda_client = boto3.client('lambda')
+details_content=$(echo "$file_content" | grep -oP 'details = \{.*?\}')
 
-# Get the function configuration to retrieve triggers
-function_config = lambda_client.get_function_configuration(FunctionName=lambda_function_name)
-
-# Extract triggers from the response
-triggers = function_config.get('Triggers', [])
-
-# Print the triggers
-for trigger in triggers:
-    print(trigger)
+if [ -n "$details_content" ]; then
+    details_content=$(echo "$details_content" | awk -F '{' '{print $2}' | awk -F '}' '{print $1}')
+    echo "$details_content}"
+else
+    echo "Details not found in the file."
+fi
