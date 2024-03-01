@@ -1,12 +1,24 @@
 #!/bin/bash
 
-file_content=$(<your_file.txt)
+files=("abc.py" "def.py" "ghi.py")
 
-details_content=$(echo "$file_content" | grep -oP 'details = \{.*?\}')
+for file in "${files[@]}"; do
+    if [ -f "$file" ]; then
+        file_content=$(<"$file")
 
-if [ -n "$details_content" ]; then
-    details_content=$(echo "$details_content" | awk -F '{' '{print $2}' | awk -F '}' '{print $1}')
-    echo "$details_content}"
-else
-    echo "Details not found in the file."
-fi
+        details_content=$(echo "$file_content" | grep -oP 'details = \{.*?\}')
+
+        if [ -n "$details_content" ]; then
+            details_content=$(echo "$details_content" | awk -F '{' '{print $2}' | awk -F '}' '{print $1}')
+            echo "Content from $file:"
+            echo "$details_content}"
+            echo "---"
+        else
+            echo "Details not found in $file."
+            echo "---"
+        fi
+    else
+        echo "$file not found."
+        echo "---"
+    fi
+done
