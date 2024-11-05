@@ -28,13 +28,9 @@ done
 
 
 
-Requirements/Problem Statement:
-The Black Duck scan identified critical vulnerabilities within specific Lambda layers, "AWSUSGHHUSDWD-CSTMAwsMicroservice" and "AWSUSGHHUSDWT-CirrusAdmnUINodePackages." Vulnerable components included python-certifi-2018.11.29, json-schema-0.2.2 and 0.2.3, and tough-cookie-v2.5.0. To mitigate security risks, updates to these components were required to eliminate vulnerabilities in our development and testing environments.
+Requirements/Problem Statement: The SSL/TLS certificates used by EMR clusters are self-signed and must be renewed annually to ensure secure data encryption over the network. The current certificates are set to expire on November 21, 2024, and must be renewed to prevent disruptions to PMR production jobs.
 
-Implementation:
-We updated vulnerable packages with secure versions: python-certifi-0.4.0, json-schema-2024.02.02, and tough-cookie-5.0.0-rc.1. Additionally, deprecated packages, like request, were removed from the Lambda layer "AWSUSGHHUSDWT-CirrusAdmnUINodePackages." A new build was created and redeployed to apply these updates.
+Implementation: The USDH team has completed the renewal of the self-signed SSL certificates for EMR in the DEV environment, establishing a tested approach. The RMO team is now set to replicate this renewal process in higher environments to secure the EMR clusters for production.
 
-Outcome:
-Post-update Black Duck scans confirmed that all critical vulnerabilities were resolved. The updated Lambda layers were validated for stability, and functionality was thoroughly tested in the Admin UI, confirming no adverse impacts. Development is now complete with secure, stable, and tested Lambda layers.
+Outcome: This staged renewal approach ensures continuity for PMR production operations by mitigating potential impacts of certificate expiration, confirming security and stability in DEV, and preparing for seamless deployment in production.
 
-Just note this
