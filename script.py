@@ -28,9 +28,11 @@ done
 
 
 
-Requirements/Problem Statement: During the MCS 2.0 migration, USDH transitioned the integration bucket com-merck-hhieus-test-integration to HHIE accounts, with access granted to IAM user arn:aws:iam::004109663796:user/srvhhie-us-integration. However, Informatica applications are experiencing access failures, returning errors that suggest bucket access issues or potential misconfiguration in region settings.
+Requirements/Problem Statement: As part of data modernization, we aimed to create a sample ingestion pipeline using the DIFW framework to convert Parquet data into Delta format and catalog it in Unity Catalog. This included three ingestion flows: Parquet to Unity Catalog, Parquet to Delta, and Delta to Unity Catalog.
 
-Implementation: The issue was traced to DNS usage (usdh01.hhie.tst.merck.com) in Redshift connections within Informatica. A temporary solution was provided, advising the use of an alternate Redshift JDBC connection string for stability: jdbc:redshift://hhieusdhrst01.cpdsnhacsfma.us-east-1.redshift.amazonaws.com:25881/ghhusddwrs02?ssl=true
+Implementation: The development encountered an initial blocker related to accessing secrets from the Databricks role, which required updated permissions. The AWS team assisted in resolving this access issue, allowing the necessary permissions for secret management.
 
-Outcome: This workaround allows continued Informatica operations while the root cause is being investigated with the Informatica vendor. A DevSecOps ticket has also been referenced by Santosh Singh for further tracking and resolution.
+Outcome: With the access issue resolved, development was completed successfully. The DIFW framework now supports seamless conversions from Parquet to Delta and Unity Catalog, meeting ingestion requirements and enhancing data accessibility in Unity Catalog.
+
+
 
