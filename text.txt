@@ -1,9 +1,11 @@
 Requirement/Problem Statement
 
-USDH is upgrading the EMR cluster to resolve the Log4Shell vulnerability by Q1 2025. An exception approval from ITRMS has been granted to apply exception tags in the interim.
+Remove USDH resources related to non-prod environments from the CIM account and restrict/remove Dev/Test and UAT access for USDH IAM users/roles.
 
 Implementation
 
-Exception tags will be deployed through the formal deployment process due to the required code changes.
+We have identified and listed the USDH resources in the CIM account for non-prod environments. IAM users and roles associated with non-prod environments have been deleted. USDH resources in the DEV environment have been removed. Remaining resources for TEST and UAT environments will be deleted soon.
 
 Outcome
+
+Work is in progress, with IAM roles and DEV environment resources already deleted. TEST and UAT resources will be removed shortly.
