@@ -1,8 +1,7 @@
 Requirement/Problem Statement
-The current EMR cluster uses outdated versions of Python (3.7) and Spark (3.1.2), both of which are no longer supported. Additionally, Wiz.io has detected Log4Shell vulnerabilities in the existing EMR setup, necessitating an urgent update for security compliance and compatibility.
+USDH currently uses static security installation packages from S3, which do not receive updates or patches. ITRMS recommends a dynamic process to download and install the latest packages at runtime for improved security.
 
 Implementation
-To address these issues, we are upgrading EMR from version 6.5 to 6.15, updating Python and Spark to their latest versions, and modifying the codebase for compatibility. This involves reviewing and updating cluster configurations, adjusting Spark settings, and remediating Python code and Spark functions to ensure smooth operation.
+We are transitioning from static to dynamic package installation to ensure up-to-date security on EMR clusters.
 
 Outcome
-Ongoing work includes analyzing cluster configuration, validating Spark settings, and identifying scripts that require updates for full compatibility with the latest EMR environment.
