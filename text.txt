@@ -1,7 +1,9 @@
 Requirement/Problem Statement
-USDH currently uses static security installation packages from S3, which do not receive updates or patches. ITRMS recommends a dynamic process to download and install the latest packages at runtime for improved security.
+
+USDH is upgrading the EMR cluster to resolve the Log4Shell vulnerability by Q1 2025. An exception approval from ITRMS has been granted to apply exception tags in the interim.
 
 Implementation
-We are transitioning from static to dynamic package installation to ensure up-to-date security on EMR clusters.
+
+Exception tags will be deployed through the formal deployment process due to the required code changes.
 
 Outcome
