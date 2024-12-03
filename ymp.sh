@@ -1,9 +1,5 @@
 #!/bin/bash
 
-# Set the current date and the date two months ago in seconds since epoch
-CURRENT_DATE=$(date +%s)
-TWO_MONTHS_AGO=$(date -d '2 months ago' +%s)
-
 # Get a list of Lambda functions whose name starts with "USDH-"
 aws lambda list-functions --query "Functions[?starts_with(FunctionName, 'USDH-')].[FunctionName]" --output text | while read -r function_name
 do
@@ -12,19 +8,17 @@ do
     --namespace AWS/Lambda \
     --metric-name Invocations \
     --dimensions Name=FunctionName,Value=$function_name \
-    --start-time "$(date -d '2 months ago' --utc +%Y-%m-%dT%H:%M:%SZ)" \
+    --start-time "1970-01-01T00:00:00Z" \  # Start from epoch to get any available data
     --end-time "$(date --utc +%Y-%m-%dT%H:%M:%SZ)" \
     --period 86400 \
     --statistics Sum \
     --query "Datapoints | sort_by(@, &Timestamp)[-1].Timestamp" \
     --output text)
 
-  # Check if the last invocation is within the last 2 months
+  # Check if the function has been invoked at least once
   if [ "$last_invoked" != "None" ]; then
-    last_invoked_epoch=$(date -d "$last_invoked" +%s)
-
-    if [ $last_invoked_epoch -gt $TWO_MONTHS_AGO ]; then
-      echo "Lambda Function: $function_name was last invoked on $last_invoked"
-    fi
+    echo "Lambda Function: $function_name was last invoked on $last_invoked"
+  else
+    echo "Lambda Function: $function_name has never been invoked."
   fi
 done
