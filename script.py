@@ -1,38 +1,73 @@
+To list AWS Lambda functions that start with the name "USDH-" and were last invoked within the last 2 years, you can use AWS CLI along with some shell scripting. Below is an example script to achieve this:
+
+Prerequisites:
+
+1. AWS CLI must be installed and configured on your system.
+
+
+2. Ensure you have the necessary permissions to list Lambda functions and get their last invoke time.
+
+
+
+Script:
+
 #!/bin/bash
 
-files=("abc.py" "def.py" "ghi.py")
+# Set the current date and the date two years ago in seconds since epoch
+CURRENT_DATE=$(date +%s)
+TWO_YEARS_AGO=$(date -d '2 years ago' +%s)
 
-for file in "${files[@]}"; do
-    if [ -f "$file" ]; then
-        file_content=$(<"$file")
+# Get a list of Lambda functions whose name starts with "USDH-"
+aws lambda list-functions --query "Functions[?starts_with(FunctionName, 'USDH-')].[FunctionName]" --output text | while read -r function_name
+do
+  # Get the last invocation time of the function using the CloudWatch metric
+  last_invoked=$(aws cloudwatch get-metric-statistics \
+    --namespace AWS/Lambda \
+    --metric-name Invocations \
+    --dimensions Name=FunctionName,Value=$function_name \
+    --start-time "$(date -d '2 years ago' --utc +%Y-%m-%dT%H:%M:%SZ)" \
+    --end-time "$(date --utc +%Y-%m-%dT%H:%M:%SZ)" \
+    --period 86400 \
+    --statistics Sum \
+    --query "Datapoints | sort_by(@, &Timestamp)[-1].Timestamp" \
+    --output text)
 
-        details_content=$(echo "$file_content" | grep -oP 'details = \{.*?\}')
+  # Check if the last invocation is within the last 2 years
+  if [ "$last_invoked" != "None" ]; then
+    last_invoked_epoch=$(date -d "$last_invoked" +%s)
 
-        if [ -n "$details_content" ]; then
-            details_content=$(echo "$details_content" | awk -F '{' '{print $2}' | awk -F '}' '{print $1}')
-            echo "Content from $file:"
-            echo "$details_content}"
-            echo "---"
-        else
-            echo "Details not found in $file."
-            echo "---"
-        fi
-    else
-        echo "$file not found."
-        echo "---"
+    if [ $last_invoked_epoch -gt $TWO_YEARS_AGO ]; then
+      echo "Lambda Function: $function_name was last invoked on $last_invoked"
     fi
+  fi
 done
 
+Explanation:
+
+1. Get Current and Two-Year-Ago Dates: The script first calculates the current date and the date two years ago in seconds since the epoch.
+
+
+2. List Lambda Functions: The script uses aws lambda list-functions to list all Lambda functions whose names start with "USDH-".
+
+
+3. Get Last Invocation Time: For each function, the script uses aws cloudwatch get-metric-statistics to retrieve the last invocation timestamp based on the CloudWatch metrics.
+
+
+4. Check if Last Invocation is within 2 Years: The script compares the last invocation time with the date two years ago. If the function was invoked within the last two years, the function name and last invoked timestamp are printed.
 
 
 
+How to Run:
+
+1. Save the script in a file, e.g., list_usdh_lambda.sh.
 
 
-Requirements/Problem Statement: As part of data modernization, we aimed to create a sample ingestion pipeline using the DIFW framework to convert Parquet data into Delta format and catalog it in Unity Catalog. This included three ingestion flows: Parquet to Unity Catalog, Parquet to Delta, and Delta to Unity Catalog.
-
-Implementation: The development encountered an initial blocker related to accessing secrets from the Databricks role, which required updated permissions. The AWS team assisted in resolving this access issue, allowing the necessary permissions for secret management.
-
-Outcome: With the access issue resolved, development was completed successfully. The DIFW framework now supports seamless conversions from Parquet to Delta and Unity Catalog, meeting ingestion requirements and enhancing data accessibility in Unity Catalog.
+2. Give execute permission: chmod +x list_usdh_lambda.sh.
 
 
+3. Run the script: ./list_usdh_lambda.sh.
+
+
+
+This script will print the Lambda function names and their last invocation time if they were invoked in the last two years.
 
