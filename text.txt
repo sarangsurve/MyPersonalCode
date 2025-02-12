@@ -1,4 +1,4 @@
-Requirement/Problem Statement
+miRequirement/Problem Statement
 
 Several systems managed by the team require an upgrade of Qualys Agents to meet current security standards. Additionally, Amazon Machine Images (AMIs) using the "Bake-in" process must be updated to adopt the microservices option during installation or activation.
 
@@ -26,4 +26,43 @@ Changes have been made to the relevant files to remove the legacy proxy configur
 Outcome
 
 Changes have been applied, and further validation is in progress to confirm if a restart or remount is necessary.
+
+
+
+
+
+
+Requirement/Problem Statement
+
+Wiz.io identified high-priority issues, including AMS resources not being protected by the default CoreInfra ANS Backup Plan and vulnerabilities related to CVE-2021-44228 (Log4Shell) in some resources.
+
+Implementation
+
+The team analyzed the MizIO report, identified affected resources, and connected with the MIZIO team. A Jira ticket is in place to resolve the Log4Shell issue, and key rotations were confirmed as valid.
+
+Outcome
+
+Analysis is ongoing, with actions in progress for Log4Shell remediation and validation of IAM activities.
+
+
+
+
+
+
+
+
+
+Requirement/Problem Statement
+
+The network team provided a sheet listing source IPs connecting to the legacy Merck proxy, which needs analysis to identify USDH-owned IPs for remediation.
+
+Implementation
+
+The USDH team reviewed the CSTO Weekly Report and identified two Liaison servers from the "GHHUSDW" app that require proxy remediation. For "HHIE," hundreds of source IPs were found, mainly LATAM-related, with no production subnets matching USDH resources.
+
+Outcome
+
+Liaison server remediation is in progress, and a note has been sent to the Biz squad for further investigation of BigQuery jobs. Platform team involvement is requested to trace ownership of remaining IPs.
+
+
 
