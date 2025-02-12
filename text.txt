@@ -1,1 +1,29 @@
- 
+Requirement/Problem Statement
+
+Several systems managed by the team require an upgrade of Qualys Agents to meet current security standards. Additionally, Amazon Machine Images (AMIs) using the "Bake-in" process must be updated to adopt the microservices option during installation or activation.
+
+Implementation
+
+The Qualys agent upgrade has been completed. The team has requested validation pointers from the Qualys team and is awaiting feedback to ensure the upgrade is successful.
+
+Outcome
+
+Verification of the upgrade is in progress, with a request for validation sent to the Qualys team. Further checks will be performed once the pointers are received.
+
+
+
+
+
+
+Requirement/Problem Statement
+
+The legacy internet proxies (webproxy.merck.com) need to be removed from the Liaison servers as part of the overall proxy configuration cleanup.
+
+Implementation
+
+Changes have been made to the relevant files to remove the legacy proxy configuration. The team is determining whether a server restart or remount of mount points is needed for the changes to take effect.
+
+Outcome
+
+Changes have been applied, and further validation is in progress to confirm if a restart or remount is necessary.
+
