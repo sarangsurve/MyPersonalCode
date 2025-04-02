@@ -1,38 +1,70 @@
-#!/bin/bash
+import re
 
-files=("abc.py" "def.py" "ghi.py")
+def convert_to_markdown_table(markdown_text):
+    sections = markdown_text.strip().split("***")
+    
+    rows = []
+    for section in sections:
+        lines = section.strip().split("\n")
+        if lines:
+            first_line = lines[0]
+            match = re.match(r"\[(.*?)\]\((.*?)\)", first_line)
+            if match:
+                link_text, link_url = match.groups()
+                formatted_text = f"[{link_text}]({link_url})" + "<br><br>" + "<br>".join(lines[1:]).strip()
+                rows.append(f"| {formatted_text} |  |  |  |")
+    
+    table_header = "| Column 1 | Column 2 | Column 3 | Column 4 |\n"
+    table_divider = "|----------|----------|----------|----------|\n"
+    table_content = "\n".join(rows)
+    
+    return table_header + table_divider + table_content
 
-for file in "${files[@]}"; do
-    if [ -f "$file" ]; then
-        file_content=$(<"$file")
+# Example Markdown Input
+markdown_input = '''
+[AVS](https://localhost/AVS)
 
-        details_content=$(echo "$file_content" | grep -oP 'details = \{.*?\}')
+AVSawvga
 
-        if [ -n "$details_content" ]; then
-            details_content=$(echo "$details_content" | awk -F '{' '{print $2}' | awk -F '}' '{print $1}')
-            echo "Content from $file:"
-            echo "$details_content}"
-            echo "---"
-        else
-            echo "Details not found in $file."
-            echo "---"
-        fi
-    else
-        echo "$file not found."
-        echo "---"
-    fi
-done
+wvawvae
+ave
+
+***
+
+[XAU](https://localhost/XAU)
+
+XAUawvga
+eju
+beab
 
 
+ebvaeb
+bewaab
 
+***
 
+[AVEB](https://localhost/AVEB)
 
+AVEBawvga
+abea
+abeab
 
-Requirements/Problem Statement: As part of data modernization, we aimed to create a sample ingestion pipeline using the DIFW framework to convert Parquet data into Delta format and catalog it in Unity Catalog. This included three ingestion flows: Parquet to Unity Catalog, Parquet to Delta, and Delta to Unity Catalog.
+berbw
+abe
 
-Implementation: The development encountered an initial blocker related to accessing secrets from the Databricks role, which required updated permissions. The AWS team assisted in resolving this access issue, allowing the necessary permissions for secret management.
+***
 
-Outcome: With the access issue resolved, development was completed successfully. The DIFW framework now supports seamless conversions from Parquet to Delta and Unity Catalog, meeting ingestion requirements and enhancing data accessibility in Unity Catalog.
+[VKEIO](https://localhost/VKEIO)
 
+VKEIOawvga
 
+***
 
+[VBAA](https://localhost/VBAA)
+
+VBAAawvga
+'''
+
+# Generate and print the markdown table
+markdown_table = convert_to_markdown_table(markdown_input)
+print(markdown_table)
